@@ -1,0 +1,11 @@
+services:
+  benchmark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tugas1_benchmark
+    working_dir: /app
+    volumes:
+      - ./transaksi_2gb.csv:/app/transaksi_2gb.csv:ro
+    cpus: 6
+    command: ["python", "--version"]

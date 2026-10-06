@@ -1,0 +1,66 @@
+SPESIFIKASI DETEKSI ANOMALI DATA TRANSAKSI
+Tugas 1 - Sistem Terdistribusi dan Komputasi Paralel
+
+Dataset:
+- File: transaksi_2gb.csv
+- Target ukuran: 2 GB
+- Dataset berisi transaksi normal dan transaksi anomali yang sengaja disisipkan.
+
+Tujuan:
+Mendeteksi transaksi anomali menggunakan tiga pendekatan pemrosesan:
+1. Sequential
+2. Threading
+3. Multiprocessing
+
+ATURAN ANOMALI
+
+1. JUMLAH NOL
+   Kondisi:
+       jumlah == 0
+   Alasan:
+       Transaksi dengan jumlah barang nol dianggap tidak valid.
+
+2. JUMLAH NEGATIF
+   Kondisi:
+       jumlah < 0
+   Alasan:
+       Jumlah barang tidak boleh bernilai negatif.
+
+3. HARGA NEGATIF
+   Kondisi:
+       harga_satuan < 0
+   Alasan:
+       Harga satuan tidak boleh bernilai negatif.
+
+4. TOTAL TIDAK SESUAI
+   Kondisi:
+       total != jumlah * harga_satuan
+   Alasan:
+       Nilai total transaksi harus sama dengan jumlah dikalikan harga satuan.
+
+5. JUMLAH EKSTREM
+   Kondisi:
+       jumlah > 1000
+   Alasan:
+       Jumlah pembelian yang sangat besar dianggap sebagai nilai ekstrem/anomali.
+
+6. HARGA EKSTREM
+   Kondisi:
+       harga_satuan > 50.000.000
+   Alasan:
+       Harga satuan di atas Rp50.000.000 dianggap sebagai nilai ekstrem/anomali.
+
+7. DUPLIKAT TRANSAKSI
+   Kondisi:
+       id_transaksi muncul lebih dari satu kali.
+   Alasan:
+       ID transaksi seharusnya unik.
+
+CATATAN PENTING
+- Program deteksi tidak membaca ground_truth_anomali.csv.
+- Program deteksi hanya membaca transaksi_2gb.csv.
+- ground_truth_anomali.csv digunakan setelah proses deteksi untuk validasi hasil.
+- Ketiga versi program harus menggunakan aturan anomali yang sama.
+- Yang dibandingkan pada tugas adalah cara pemrosesannya, bukan aturan deteksinya.
+- Output utama setiap program harus berupa jumlah anomali dan waktu eksekusi.
+- Untuk validasi, hasil deteksi dapat dibandingkan dengan ground truth setelah benchmark selesai.
