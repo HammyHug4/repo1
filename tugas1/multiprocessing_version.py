@@ -82,7 +82,8 @@ def cari_batas(file_path, jumlah_process):
         batas = [data_start]
 
         for i in range(1, jumlah_process):
-            target = data_start + ((ukuran - data_start) * i // jumlah_process)
+            target = data_start + ((ukuran - data_start) * i 
+                                   // jumlah_process)
 
             f.seek(target)
 

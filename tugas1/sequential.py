@@ -106,7 +106,8 @@ def cek_anomali(row, id_terbesar):
 def proses_sequential():
     if not os.path.exists(FILE_DATASET):
         print(f"ERROR: File '{FILE_DATASET}' tidak ditemukan.")
-        print("Pastikan sequential.py berada satu folder dengan transaksi_2gb.csv.")
+        print("Pastikan sequential.py berada satu folder dengan" \
+        " transaksi_2gb.csv.")
         return
 
     jumlah_baris = 0
