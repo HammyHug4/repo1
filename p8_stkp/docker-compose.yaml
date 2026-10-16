@@ -1,0 +1,13 @@
+services:
+  python:
+    image: python:3.12-slim
+    container_name: python
+    volumes:
+      - ./python:/app
+    tty: true
+    networks:
+      - docker_network
+
+networks:
+  docker_network:
+    driver: bridge

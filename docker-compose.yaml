@@ -42,6 +42,17 @@ services:
       - mongodb_data:/data/db
     networks:
       - stkp_network
+  
+  
+  python:
+    image: python:3.12-slim
+    container_name: python
+    volumes:
+      - ./p9_stkp:/app
+    tty: true
+    stdin_open: true
+    networks:
+      - stkp_network
 
 volumes:
   mysql_data:
