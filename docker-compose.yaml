@@ -1,76 +1,168 @@
-services:
+# services:
 
-  # disini nginx
+#   # disini nginx
+#   nginx:
+#     image: nginx:alpine # img yang digunakan
+#     container_name: nginx
+#     ports:
+#       - "8080:80"
+#     volumes:
+#       - ./nginx:/usr/share/nginx/html:ro
+#     networks:
+#       - stkp_network
+
+#   # disini mysql
+#   mysql:
+#     image: mysql:8.0
+#     container_name: mysql
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: stkp
+#       MYSQL_USER: stkp_user
+#       MYSQL_PASSWORD: stkp_password
+#     ports:
+#       - "3307:3307"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+#     networks:
+#       - stkp_network
+  
+#   # Database MongoDB
+#   mongodb:
+#     image: mongo:latest
+#     container_name: mongodb
+#     restart: always
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: root
+#       MONGO_INITDB_ROOT_PASSWORD: root
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongodb_data:/data/db
+#     networks:
+#       - stkp_network
+  
+  
+#   python:
+#     image: python:3.12-slim
+#     container_name: python
+#     volumes:
+#       - ./p10:/app
+#     tty: true
+#     stdin_open: true
+#     networks:
+#       - stkp_network
+
+# volumes:
+#   mysql_data:
+#   mongodb_data:
+
+# networks:
+#   stkp_network:
+#     driver: bridge
+
+# # ini web server saja gak nyimpen
+# # cari image lain mysql
+# # suruh docker ps untuk image mongo db
+
+# # lihat image yang ada (docker image ls)
+# # pull image mysql:8.0 (docker pull mysql:8.0)
+# # pull image mongo:latest (docker pull mongo:latest)
+# # menjalankan container dari image yang sudah di pull (docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=stkp -e MYSQL_USER=stkp_user -e MYSQL_PASSWORD=stkp_password -p 3306:3306 mysql:8.0)
+# # menjalankan container dari image mongo (docker run -d --name mongodb -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root -p 27017:27017 mongo:latest)
+# # docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root mongo:latest
+# # docker run -d --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql:8.0
+# # lihat container yang sedang berjalan (docker ps)
+
+services:
+  # DISTRIBUTED MUTEX
+  app3:
+    image: python:3.12-slim
+    container_name: app3
+    hostname: app3
+    volumes:
+      - ./p110_lamport:/app
+    tty: true
+    networks:
+      - docker_network
+  app2:
+    image: python:3.12-slim
+    container_name: app2
+    hostname: app2
+    volumes:
+      - ./p110_lamport:/app
+    tty: true
+    networks:
+      - docker_network
+  app1:
+    image: python:3.12-slim
+    container_name: app1
+    hostname: app1
+    volumes:
+      - ./p110_lamport:/app
+    tty: true
+    networks:
+      - docker_network
+  # DISTRIBUTED SYSTEM ARCHITECTURE & CLOCK SYNCRONIZATION
+  presentation:
+    image: python:3.12-slim
+    container_name: presentation
+    volumes:
+      - ./p110_lamport:/app
+    tty: true
+    environment:
+      - OFFSET=15
+      - ROLE=slave
+    networks:
+      - docker_network
+  application:
+    image: python:3.12-slim
+    container_name: application
+    volumes:
+      - ./p110_lamport:/app
+    tty: true
+    environment:
+      - OFFSET=10
+      - ROLE=slave
+    networks:
+      - docker_network
+  database:
+    image: python:3.12-slim
+    container_name: database
+    volumes:
+      - ./p110_lamport:/app
+    tty: true
+    environment:
+      - OFFSET=-5
+      - ROLE=master
+    networks:
+      - docker_network
   nginx:
-    image: nginx:alpine # img yang digunakan
+    image: nginx:alpine
     container_name: nginx
     ports:
       - "8080:80"
     volumes:
-      - ./nginx:/usr/share/nginx/html:ro
+      - ./stkp_volume/nginx:/usr/share/nginx/html:ro
     networks:
-      - stkp_network
-
-  # disini mysql
+      - docker_network
   mysql:
-    image: mysql:8.0
+    image: mariadb:10.11
     container_name: mysql
-    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: stkp
-      MYSQL_USER: stkp_user
-      MYSQL_PASSWORD: stkp_password
-    ports:
-      - "3307:3307"
+      MARIADB_ROOT_PASSWORD: secretsecret
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: secretsecret
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - stkp_network
-  
-  # Database MongoDB
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - stkp_network
-  
-  
-  python:
-    image: python:3.12-slim
-    container_name: python
-    volumes:
-      - ./p9_stkp:/app
+      - docker_network
     tty: true
-    stdin_open: true
-    networks:
-      - stkp_network
+    
+networks:
+  docker_network:
+    driver: bridge
 
 volumes:
   mysql_data:
-  mongodb_data:
-
-networks:
-  stkp_network:
-    driver: bridge
-
-# ini web server saja gak nyimpen
-# cari image lain mysql
-# suruh docker ps untuk image mongo db
-
-# lihat image yang ada (docker image ls)
-# pull image mysql:8.0 (docker pull mysql:8.0)
-# pull image mongo:latest (docker pull mongo:latest)
-# menjalankan container dari image yang sudah di pull (docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=stkp -e MYSQL_USER=stkp_user -e MYSQL_PASSWORD=stkp_password -p 3306:3306 mysql:8.0)
-# menjalankan container dari image mongo (docker run -d --name mongodb -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root -p 27017:27017 mongo:latest)
-# docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root mongo:latest
-# docker run -d --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql:8.0
-# lihat container yang sedang berjalan (docker ps)
