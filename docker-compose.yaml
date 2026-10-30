@@ -75,14 +75,239 @@
 # # docker run -d --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql:8.0
 # # lihat container yang sedang berjalan (docker ps)
 
+# services:
+#   # DISTRIBUTED MUTEX
+#   app3:
+#     image: python:3.12-slim
+#     container_name: app3
+#     hostname: app3
+#     volumes:
+#       - ./p11:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   app2:
+#     image: python:3.12-slim
+#     container_name: app2
+#     hostname: app2
+#     volumes:
+#       - ./p11:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   app1:
+#     image: python:3.12-slim
+#     container_name: app1
+#     hostname: app1
+#     volumes:
+#       - ./p11:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   # DISTRIBUTED SYSTEM ARCHITECTURE & CLOCK SYNCRONIZATION
+#   presentation:
+#     image: python:3.12-slim
+#     container_name: presentation
+#     volumes:
+#       - ./p11:/app
+#     tty: true
+#     environment:
+#       - OFFSET=15
+#       - ROLE=slave
+#     networks:
+#       - docker_network
+#   application:
+#     image: python:3.12-slim
+#     container_name: application
+#     volumes:
+#       - ./p11:/app
+#     tty: true
+#     environment:
+#       - OFFSET=10
+#       - ROLE=slave
+#     networks:
+#       - docker_network
+#   database:
+#     image: python:3.12-slim
+#     container_name: database
+#     volumes:
+#       - ./p11:/app
+#     tty: true
+#     environment:
+#       - OFFSET=-5
+#       - ROLE=master
+#     networks:
+#       - docker_network
+#   nginx:
+#     image: nginx:alpine
+#     container_name: nginx
+#     ports:
+#       - "8080:80"
+#     volumes:
+#       - ./stkp_volume/nginx:/usr/share/nginx/html:ro
+#     networks:
+#       - docker_network
+#   mysql:
+#     image: mariadb:10.11
+#     container_name: mysql
+#     environment:
+#       MARIADB_ROOT_PASSWORD: secretsecret
+#       MARIADB_USER: admin
+#       MARIADB_PASSWORD: secretsecret
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+#     networks:
+#       - docker_network
+#     tty: true
+    
+# networks:
+#   docker_network:
+#     driver: bridge
+
+# volumes:
+#   mysql_data:
+
+# networks:
+#   docker_network:
+#     driver: bridge
+# volumes:
+#   mysql_data:
+# services:
+#   # Data Replication
+#   peer1:
+#     image: python:3.12-slim
+#     container_name: peer1
+#     hostname: peer1
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   peer2:
+#     image: python:3.12-slim
+#     container_name: peer2
+#     hostname: peer2
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   # DISTRIBUTED MUTEX
+#   app3:
+#     image: python:3.12-slim
+#     container_name: app3
+#     hostname: app3
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   app2:
+#     image: python:3.12-slim
+#     container_name: app2
+#     hostname: app2
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   app1:
+#     image: python:3.12-slim
+#     container_name: app1
+#     hostname: app1
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     networks:
+#       - docker_network
+#   # DISTRIBUTED SYSTEM ARCHITECTURE & CLOCK SYNCRONIZATION
+#   presentation:
+#     image: python:3.12-slim
+#     container_name: presentation
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     environment:
+#       - OFFSET=15
+#       - ROLE=slave
+#     networks:
+#       - docker_network
+#   application:
+#     image: python:3.12-slim
+#     container_name: application
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     environment:
+#       - OFFSET=10
+#       - ROLE=slave
+#     networks:
+#       - docker_network
+#   database:
+#     image: python:3.12-slim
+#     container_name: database
+#     volumes:
+#       - ./p14:/app
+#     tty: true
+#     environment:
+#       - OFFSET=-5
+#       - ROLE=master
+#     networks:
+#       - docker_network
+#   nginx:
+#     image: nginx:alpine
+#     container_name: nginx
+#     ports:
+#       - "8080:80"
+#     volumes:
+#       - ./stkp_volume/nginx:/usr/share/nginx/html:ro
+#     networks:
+#       - docker_network
+#   mysql:
+#     image: mariadb:10.11
+#     container_name: mysql
+#     environment:
+#       MARIADB_ROOT_PASSWORD: secretsecret
+#       MARIADB_USER: admin
+#       MARIADB_PASSWORD: secretsecret
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+#     networks:
+#       - docker_network
+#     tty: true
+
+networks:
+  docker_network:
+    driver: bridge
+volumes:
+  mysql_data:
 services:
+  # Data Replication
+  peer1:
+    image: python:3.12-slim
+    container_name: peer1
+    hostname: peer1
+    volumes:
+      - ./p13:/app
+    tty: true
+    networks:
+      - docker_network
+  peer2:
+    image: python:3.12-slim
+    container_name: peer2
+    hostname: peer2
+    volumes:
+      - ./p13:/app
+    tty: true
+    networks:
+      - docker_network
   # DISTRIBUTED MUTEX
   app3:
     image: python:3.12-slim
     container_name: app3
     hostname: app3
     volumes:
-      - ./p110_lamport:/app
+      - ./p13:/app
     tty: true
     networks:
       - docker_network
@@ -91,7 +316,7 @@ services:
     container_name: app2
     hostname: app2
     volumes:
-      - ./p110_lamport:/app
+      - ./p13:/app
     tty: true
     networks:
       - docker_network
@@ -100,7 +325,7 @@ services:
     container_name: app1
     hostname: app1
     volumes:
-      - ./p110_lamport:/app
+      - ./p13:/app
     tty: true
     networks:
       - docker_network
@@ -109,7 +334,7 @@ services:
     image: python:3.12-slim
     container_name: presentation
     volumes:
-      - ./p110_lamport:/app
+      - ./p13:/app
     tty: true
     environment:
       - OFFSET=15
@@ -120,7 +345,7 @@ services:
     image: python:3.12-slim
     container_name: application
     volumes:
-      - ./p110_lamport:/app
+      - ./p13:/app
     tty: true
     environment:
       - OFFSET=10
@@ -131,7 +356,7 @@ services:
     image: python:3.12-slim
     container_name: database
     volumes:
-      - ./p110_lamport:/app
+      - ./p13:/app
     tty: true
     environment:
       - OFFSET=-5
@@ -159,10 +384,3 @@ services:
     networks:
       - docker_network
     tty: true
-    
-networks:
-  docker_network:
-    driver: bridge
-
-volumes:
-  mysql_data:
